@@ -10,6 +10,10 @@ const isLeapYear = yearInput => {
   return (yearInput % 400 === 0) || (yearInput % 4 === 0 && yearInput % 100 !== 0);
 }
 
+const isMonthInvalid = monthInput => {
+  return monthInput >= 12;
+}
+
 const isMonthFebWithInvalidDay = (month, day) => {
   return (month === 1 && day >= 29);
 }
@@ -23,6 +27,11 @@ const isDateValid = (dateInput) => {
 
   if(year < 1901 && year > 2999) {
     console.log('Year out of permitted range');
+    return false;
+  }
+
+  if(isMonthInvalid(month)) {
+    console.log('Incorrect month');
     return false;
   }
 
@@ -58,8 +67,8 @@ const getDaysFromMilliSecs = (timeInMilliSecs) => {
 const getTimeDifferenceInDays = (startDate, endDate) => {
   if (!isDateValid(startDate) || !isDateValid(endDate)) {
     console.log("Invalid inputs");
-    
-    return;
+
+    return null;
   }
 
   const startDateInMillis = getDateInMillis(startDate);

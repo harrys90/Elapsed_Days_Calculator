@@ -20,3 +20,11 @@ test('difference between 04/07/1984 and 25/12/1984 should be 173', () => {
 test('difference between 03/01/1989 and 03/08/1983 should be 1979', () => {
   expect(dateUtils.getTimeDifferenceInDays('03/01/1989', '03/08/1983')).toBe(1979);
 });
+
+test('difference between 03/01/1989 and 03/18/1983 should be 1979', () => {
+  expect(dateUtils.getTimeDifferenceInDays('03/01/1989', '03/18/1983')).toBeNull();
+});
+
+test('difference between 03/13/1989 and 03/12/1983 should be 1979', () => {
+  expect(dateUtils.getTimeDifferenceInDays('03/13/1989', '03/12/1983')).toBeNull();
+});
