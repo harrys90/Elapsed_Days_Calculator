@@ -1,27 +1,45 @@
 const constants = require('./constants');
 
+const getDateParts = dateInput => {
+  const [day, month, year] = dateInput.split('/');
+
+  return [day, month - 1, year];
+}
+
+const isLeapYear = yearInput => {
+  return (yearInput % 400 === 0) || (yearInput % 4 === 0 && yearInput % 100 !== 0);
+}
+
+const isMonthFebWithInvalidDay = (month, day) => {
+  return (month === 1 && day >= 29);
+}
+
 const isDateValid = (dateInput) => {
-  //const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
   if(!constants.DATE_REGEX.test(dateInput)) {
     return false;
   }
 
-  const dateParts = dateInput.split('/');
-  const day = dateParts[0];
-  const month = dateParts[1];
-  const year = dateParts[2];
+  const [day, month, year] = getDateParts(dateInput);
 
-  //VALIDATE DAY, MONTH AND YEAR
+  if(year < 1901 && year > 2999) {
+    console.log('Year out of permitted range');
+    return false;
+  }
+
+  if(!isLeapYear(year) && isMonthFebWithInvalidDay(month, day)) {
+    return false;
+  }
 
   return true;
 }
 
 const getDateInMillis = (dateInput) => {
-  //POTENTIAL REFACTOR
-  const dateParts = dateInput.split('/');
-  const day = dateParts[0];
-  const month = dateParts[1] - 1;
-  const year = dateParts[2];
+  // const dateParts = dateInput.split('/');
+  // const day = dateParts[0];
+  // const month = dateParts[1];
+  // const year = dateParts[2];
+
+  const [day, month, year] = getDateParts(dateInput);
 
   return new Date(year, month, day).getTime();
 }
@@ -29,6 +47,7 @@ const getDateInMillis = (dateInput) => {
 const getTimeDiffWithNoPartial = (time1, time2) => {
   const startTime = Math.min(+time1, +time2);
   const endTime = Math.max(+time1, +time2);
+
   return endTime - startTime - constants.PARTIAL_DAYS_IN_MILLIS;
 }
 
@@ -38,7 +57,8 @@ const getDaysFromMilliSecs = (timeInMilliSecs) => {
 
 const getTimeDifferenceInDays = (startDate, endDate) => {
   if (!isDateValid(startDate) || !isDateValid(endDate)) {
-    //console.log("Invalid inputs");
+    console.log("Invalid inputs");
+    
     return;
   }
 
@@ -49,7 +69,7 @@ const getTimeDifferenceInDays = (startDate, endDate) => {
     startDateInMillis,
     endDateInMillis
   );
-  const elapsedDays = getDaysFromMilliSecs(diffwithoutPatial);
+  const elapsedDays = Math.trunc(getDaysFromMilliSecs(diffwithoutPatial));
   console.log(elapsedDays);
 
   return elapsedDays;
